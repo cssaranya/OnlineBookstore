@@ -4,12 +4,12 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
 @Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "cartitem")
 public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,11 +19,7 @@ public class CartItem {
     @JoinColumn(name = "shopping_cart_id")
     private ShoppingCart shoppingCart;
 
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    private Order order;
-
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "book_id")
     private Book book;
 

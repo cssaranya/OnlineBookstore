@@ -1,23 +1,28 @@
 package com.capgemini.OnlineBookstore.model;
 
 import jakarta.persistence.*;
-import org.springframework.data.annotation.Id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
+@Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "order_id")
-    private List<CartItem> items = new ArrayList<>();
+    @OneToOne
+    @JoinColumn(name = "shopping_cart_id")
+    private ShoppingCart shoppingCart;
 
     private LocalDateTime orderDate;
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 }
 
