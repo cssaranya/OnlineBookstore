@@ -17,11 +17,16 @@ import java.util.List;
 public class ShoppingCart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "shoppingcart_id")
     private Long id;
 
     @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CartItem> items = new ArrayList<>();
+    private List<CartItem> items;
 
     @OneToOne(mappedBy = "shoppingCart", cascade = CascadeType.ALL)
     private Order order;
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }

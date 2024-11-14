@@ -15,14 +15,22 @@ import java.time.LocalDateTime;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_id")
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "shopping_cart_id")
+    @JoinColumn(name = "shoppingcart_id")
     private ShoppingCart shoppingCart;
 
     private LocalDateTime orderDate;
+
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
+
+    private double orderamount;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
 
