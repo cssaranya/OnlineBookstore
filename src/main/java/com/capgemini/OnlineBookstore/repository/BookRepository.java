@@ -1,11 +1,11 @@
 package com.capgemini.OnlineBookstore.repository;
 
-import com.capgemini.OnlineBookstore.model.Book;
+import com.capgemini.OnlineBookstore.model.BookEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface BookRepository extends JpaRepository<Book, Long> {
-    List<Book> findByAuthor(String author);
-    Book findByTitle(String title);
+public interface BookRepository extends JpaRepository<BookEntity, Long> {
+    List<BookEntity> findByAuthor(String author);
+    BookEntity findByTitle(String title);
 }

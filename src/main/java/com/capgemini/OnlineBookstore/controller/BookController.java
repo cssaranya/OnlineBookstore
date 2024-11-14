@@ -1,8 +1,8 @@
 package com.capgemini.OnlineBookstore.controller;
 
+import com.capgemini.OnlineBookstore.dto.Book;
 import com.capgemini.OnlineBookstore.exception.BookNotFoundException;
 import com.capgemini.OnlineBookstore.exception.InvalidRequestException;
-import com.capgemini.OnlineBookstore.model.Book;
 import com.capgemini.OnlineBookstore.service.BookService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +20,14 @@ public class BookController {
     @GetMapping
     public ResponseEntity<List<Book>> getAllBooks() {
         List<Book> books = bookService.getAllBooks();
-        if (books.isEmpty()){
-            throw new BookNotFoundException("No books found");
-        }
         return ResponseEntity.ok(books);
     }
 
     @PostMapping
     public ResponseEntity<Book> saveBook(@Valid @RequestBody Book book) {
+        if (book.getTitle() == null || book.getAuthor() == null || "".equals(book.getTitle()) || "".equals(book.getAuthor())) {
+            throw new InvalidRequestException("BookEntity title and author are required");
+        }
         Book savedBook = bookService.saveBook(book);
         return ResponseEntity.ok(savedBook);
     }
@@ -40,19 +40,19 @@ public class BookController {
 
     @GetMapping("/title")
     public ResponseEntity<Book> getBookByTitle(@RequestParam String title) {
-        Book book = bookService.getBookByTitle(title);
-        if (book == null){
-            throw new BookNotFoundException("No books found with the title "+ title);
+        if(title == null || "".equals(title)){
+            throw new InvalidRequestException("Title cannot be null or empty");
         }
+        Book book = bookService.getBookByTitle(title);
         return ResponseEntity.ok(book);
     }
 
     @GetMapping("/author")
     public ResponseEntity<List<Book>> getBookByAuthor(@RequestParam String author) {
-        List<Book> books = bookService.getBookByAuthor(author);
-        if (books.isEmpty()){
-            throw new BookNotFoundException("No books found for the author "+ author);
+        if(author == null || "".equals(author)){
+            throw new InvalidRequestException("Title cannot be null or empty");
         }
+        List<Book> books = bookService.getBookByAuthor(author);
         return ResponseEntity.ok(books);
     }
 }

@@ -1,36 +1,30 @@
 package com.capgemini.OnlineBookstore.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "orders")
-public class Order {
+@Table(name = "cartitem")
+public class CartItemEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id")
+    @Column(name = "cartitem_id")
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "shoppingcart_id")
-    private ShoppingCart shoppingCart;
-
-    private LocalDateTime orderDate;
-
-    @Enumerated(EnumType.STRING)
-    private OrderStatus status;
-
-    private double orderamount;
+    @JsonBackReference
+    private ShoppingCartEntity shoppingCart;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-}
+    @JoinColumn(name = "book_id")
+    private BookEntity book;
 
+    private int quantity;
+}

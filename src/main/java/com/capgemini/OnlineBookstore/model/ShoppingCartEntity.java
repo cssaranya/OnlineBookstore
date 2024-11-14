@@ -1,12 +1,12 @@
 package com.capgemini.OnlineBookstore.model;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -14,19 +14,21 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "shoppingcart")
-public class ShoppingCart {
+public class ShoppingCartEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "shoppingcart_id")
     private Long id;
 
     @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CartItem> items;
+    @JsonManagedReference
+    private List<CartItemEntity> items;
 
     @OneToOne(mappedBy = "shoppingCart", cascade = CascadeType.ALL)
-    private Order order;
+    @JsonManagedReference
+    private OrderEntity order;
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private UserEntity user;
 }

@@ -2,7 +2,6 @@ package com.capgemini.OnlineBookstore.controller;
 
 import com.capgemini.OnlineBookstore.repository.BookRepository;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-public class BookControllerTest {
+public class BookEntityControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -48,7 +47,7 @@ public class BookControllerTest {
                         .content(bookJson))
                 .andExpect(status().isOk());
 
-        assertEquals(6, bookRepository.findAll().size());
+        assertEquals(3, bookRepository.findAll().size());
     }
 
     @Test
@@ -86,7 +85,7 @@ public class BookControllerTest {
     void testNoBookById() throws Exception {
         mockMvc.perform(get("/books/6").with(httpBasic("user", "password")))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("Book not found for id 6"));
+                .andExpect(content().string("BookEntity not found for id 6"));
     }
 
     @Test
@@ -103,7 +102,7 @@ public class BookControllerTest {
     void testNoBookByTitle() throws Exception {
         mockMvc.perform(get("/books/title").param("title","Da vinci code").with(httpBasic("user", "password")))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("No books found with the title Da vinci code"));
+                .andExpect(content().string("No book found with the title Da vinci code"));
     }
 
     @Test
