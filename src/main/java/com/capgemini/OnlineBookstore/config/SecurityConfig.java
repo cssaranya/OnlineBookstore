@@ -26,8 +26,11 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for simplicity in a backend-only application
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/books/**").authenticated() // Require authentication for /books/**
-                        .requestMatchers("/h2-console/**","/users/register").permitAll()
-                        .anyRequest().authenticated())
+                        .requestMatchers("/h2-console/**","/users/register",
+                                "/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/h2-console/**").permitAll())
                 .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()));;
         return http.build();
     }

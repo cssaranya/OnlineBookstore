@@ -12,7 +12,7 @@ public class CartItemResponseMapper {
                 .book(bookResponseMapper.map(cartItemEntity.getBook()))
                 .cartitemId(cartItemEntity.getId())
                 .quantity(cartItemEntity.getQuantity())
-                .shoppingCartId(cartItemEntity.getShoppingCart().getId())
+                .shoppingcartId(cartItemEntity.getShoppingCart().getId())
                 .build();
     }
 }

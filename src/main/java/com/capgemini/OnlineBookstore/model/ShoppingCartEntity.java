@@ -1,6 +1,7 @@
 package com.capgemini.OnlineBookstore.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -32,5 +33,6 @@ public class ShoppingCartEntity {
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private UserEntity user;
 }

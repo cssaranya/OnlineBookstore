@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CartItem {
     private Long cartitemId;
-    private Long shoppingCartId;
+    private Long shoppingcartId;
     private Book book;
     private int quantity;
 }
