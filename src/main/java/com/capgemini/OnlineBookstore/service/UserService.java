@@ -40,8 +40,8 @@ public class UserService implements UserDetailsService {
         userEntity.setPhonenumber(user.getPhonenumber());
         userEntity.setEmail(user.getEmail());
         userEntity.setAddress(user.getAddress());
-        userEntity.setUsername(user.getUsername());
-        userEntity.setPassword(user.getPassword());
+        userEntity.setUsername(user.getPassword());
+        userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
         return modelMapper.map(userRepository.save(userEntity), User.class);
     }
 

@@ -2,10 +2,7 @@ package com.capgemini.OnlineBookstore.service;
 
 import com.capgemini.OnlineBookstore.dto.CartItem;
 import com.capgemini.OnlineBookstore.dto.ShoppingCart;
-import com.capgemini.OnlineBookstore.exception.BookNotFoundException;
-import com.capgemini.OnlineBookstore.exception.CartNotFoundException;
-import com.capgemini.OnlineBookstore.exception.EntityNotFoundException;
-import com.capgemini.OnlineBookstore.exception.InvalidRequestException;
+import com.capgemini.OnlineBookstore.exception.*;
 import com.capgemini.OnlineBookstore.mapper.CartItemResponseMapper;
 import com.capgemini.OnlineBookstore.model.BookEntity;
 import com.capgemini.OnlineBookstore.model.CartItemEntity;
@@ -71,7 +68,12 @@ public class ShoppingCartService {
             logger.info("UserId " + userId + " BookId" + bookId + " quantity"+ quantity);
             throw new InvalidRequestException("UserId BookId and Quantity are required");
         }
-
+        if (!userRepository.existsById(userId)){
+            throw new UserNotFoundException("User not found with the id "+ userId);
+        }
+        if (!bookRepository.existsById(bookId)){
+            throw new BookNotFoundException("Book not found for id: " + bookId);
+        }
         ShoppingCartEntity shoppingCartEntity = cartRepository.findByUserId(userId)
                 .orElseThrow(() -> new CartNotFoundException("Shopping cart not found for user: " + userId));
 

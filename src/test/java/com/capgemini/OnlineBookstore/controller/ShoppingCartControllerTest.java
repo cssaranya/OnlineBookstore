@@ -77,11 +77,12 @@ public class ShoppingCartControllerTest {
     @Test
     @WithMockUser(username = "user")
     void testBookNotFound() throws Exception {
+        int nonExistantBookId = 6;
         ShoppingCartEntity shoppingCartEntity = new ShoppingCartEntity();
-        mockMvc.perform(post("/cart/add/{userId}/items/{bookId}", 1, 1).with(httpBasic("user", "password"))
+        mockMvc.perform(post("/cart/add/{userId}/items/{bookId}", 1, nonExistantBookId).with(httpBasic("user", "password"))
                         .param("quantity", String.valueOf(3)))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("Book not found for id: 4"));
+                .andExpect(content().string("Book not found for id: "+nonExistantBookId));
     }
 
     @Test
