@@ -11,7 +11,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Optional;
 
@@ -21,7 +21,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
-@Transactional
+@DirtiesContext
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
     @Mock
@@ -49,7 +49,7 @@ public class UserServiceTest {
         when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
 
         User user = User.builder()
-                .userid(10L)
+                .id(10L)
                 .password(username)
                 .username(password)
                 .address("brussels")
@@ -90,7 +90,7 @@ public class UserServiceTest {
     public void testLoadUserByUsername_NotFound() {
         String username = "nouser";
 
-        when(userRepository.findByUsername(anyString())).thenReturn(Optional.ofNullable(null));
+        when(userRepository.findByUsername(anyString())).thenReturn(Optional.empty());
 
         assertThrows(UsernameNotFoundException.class, () -> {
             userService.loadUserByUsername(username);

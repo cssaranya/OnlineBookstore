@@ -25,8 +25,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for simplicity in a backend-only application
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/books/**").authenticated() // Require authentication for /books/**
-                        .requestMatchers("/h2-console/**","/users/register",
+                        .requestMatchers("/books/**","/users/getById/**","/users/update/**","/cart/**").authenticated() // Require authentication for /books/**
+                        .requestMatchers("/users/register",
                                 "/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",

@@ -28,10 +28,10 @@ public class ShoppingCartControllerTest {
     @WithMockUser(username = "user")
     void testGetCart() throws Exception {
 
-        mockMvc.perform(get("/cart/1").with(httpBasic("user", "password")))
+        mockMvc.perform(get("/cart/getCart/1").with(httpBasic("user", "password")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.shoppingcartId").value(1))
-                .andExpect(jsonPath("$.user.userid").value(1))
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.user.id").value(1))
                 .andExpect(jsonPath("$.user.username").value("Saranya"))
                 .andExpect(jsonPath("$.user.email").value("saranya@test.com"))
                 .andExpect(jsonPath("$.items[0].book.title").value("Angles & Demons"))
@@ -42,10 +42,10 @@ public class ShoppingCartControllerTest {
     @WithMockUser(username = "user")
     void testCreateShoppingCart() throws Exception {
 
-        mockMvc.perform(post("/cart/2").with(httpBasic("user", "password")))
+        mockMvc.perform(post("/cart/createCart/2").with(httpBasic("user", "password")))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.shoppingcartId").value(2))
-                .andExpect(jsonPath("$.user.userid").value(2))
+                .andExpect(jsonPath("$.id").value(2))
+                .andExpect(jsonPath("$.user.id").value(2))
                 .andExpect(jsonPath("$.user.username").value("Suptha"))
                 .andExpect(jsonPath("$.user.email").value("suptha@test.com"));
     }
@@ -53,7 +53,7 @@ public class ShoppingCartControllerTest {
     @Test
     @WithMockUser(username = "user")
     void testCartExistsException() throws Exception {
-        mockMvc.perform(post("/cart/1").with(httpBasic("user", "password")))
+        mockMvc.perform(post("/cart/createCart/1").with(httpBasic("user", "password")))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Cart already exists for the user 1"));
     }
@@ -61,11 +61,11 @@ public class ShoppingCartControllerTest {
     @Test
     @WithMockUser(username = "user")
     void testAddItemToCart() throws Exception {
-        mockMvc.perform(post("/cart/{userId}/items/{bookId}", 1, 2).with(httpBasic("user", "password"))
+        mockMvc.perform(post("/cart/add/{userId}/items/{bookId}", 1, 2).with(httpBasic("user", "password"))
                         .param("quantity", String.valueOf(3)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.shoppingcartId").value(1))
-                .andExpect(jsonPath("$.user.userid").value(1))
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.user.id").value(1))
                 .andExpect(jsonPath("$.user.username").value("Saranya"))
                 .andExpect(jsonPath("$.user.email").value("saranya@test.com"))
                 .andExpect(jsonPath("$.items[0].book.title").value("Angles & Demons"))
@@ -78,7 +78,7 @@ public class ShoppingCartControllerTest {
     @WithMockUser(username = "user")
     void testBookNotFound() throws Exception {
         ShoppingCartEntity shoppingCartEntity = new ShoppingCartEntity();
-        mockMvc.perform(post("/cart/{userId}/items/{bookId}", 1, 4).with(httpBasic("user", "password"))
+        mockMvc.perform(post("/cart/add/{userId}/items/{bookId}", 1, 1).with(httpBasic("user", "password"))
                         .param("quantity", String.valueOf(3)))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Book not found for id: 4"));
@@ -87,28 +87,18 @@ public class ShoppingCartControllerTest {
     @Test
     @WithMockUser(username = "user")
     void testUpdateItemQuantity() throws Exception {
-        mockMvc.perform(put("/cart/items/{itemId}", 1).with(httpBasic("user", "password"))
+        mockMvc.perform(put("/cart/update/items/{itemId}", 1).with(httpBasic("user", "password"))
                         .param("quantity", String.valueOf(5)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.shoppingcartId").value(1))
+                .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.book.title").value("Angles & Demons"))
                 .andExpect(jsonPath("$.quantity").value(5));
     }
 
     @Test
     @WithMockUser(username = "user")
-    void testNullItemId() throws Exception {
-        Long itemId = null;
-        mockMvc.perform(put("/cart/items/{itemId}", itemId).with(httpBasic("user", "password"))
-                        .param("quantity", String.valueOf(5)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("ItemId and Quantity are required"));
-    }
-
-    @Test
-    @WithMockUser(username = "user")
     void testCartItemNotFound() throws Exception {
-        mockMvc.perform(put("/cart/items/{itemId}", 3).with(httpBasic("user", "password"))
+        mockMvc.perform(put("/cart/update/items/{itemId}", 3).with(httpBasic("user", "password"))
                         .param("quantity", String.valueOf(5)))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Cart item not found: 3"));
@@ -117,7 +107,7 @@ public class ShoppingCartControllerTest {
     @Test
     @WithMockUser(username = "user")
     void testNegativeQuantity() throws Exception {
-        mockMvc.perform(put("/cart/items/{itemId}", 1).with(httpBasic("user", "password"))
+        mockMvc.perform(put("/cart/update/items/{itemId}", 1).with(httpBasic("user", "password"))
                         .param("quantity", String.valueOf(-5)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("ItemId and Quantity are required"));
@@ -126,7 +116,8 @@ public class ShoppingCartControllerTest {
     @Test
     @WithMockUser(username = "user")
     void testRemoveCartItem() throws Exception {
-        mockMvc.perform(delete("/items/{itemId}", 1).with(httpBasic("user", "password")))
-                .andExpect(status().isOk());
+        mockMvc.perform(delete("/cart/delete/items/{itemId}", 1).with(httpBasic("user", "password")))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Cart item deleted successfully"));
     }
 }

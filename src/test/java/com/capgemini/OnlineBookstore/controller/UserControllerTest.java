@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
@@ -23,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional
+@DirtiesContext
 public class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -124,7 +125,7 @@ public class UserControllerTest {
     @Test
     @WithMockUser(username = "user")
     void testGetUserById() throws  Exception {
-        mockMvc.perform(get("/users/1").with(httpBasic("user", "password")))
+        mockMvc.perform(get("/users/getById/1").with(httpBasic("user", "password")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value("Saranya"));
     }
@@ -139,7 +140,7 @@ public class UserControllerTest {
                 .username("css")
                 .password("css")
                 .build();
-        mockMvc.perform(put("/users/2")
+        mockMvc.perform(put("/users/update/2")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(user))
                         .with(httpBasic("user", "password")))

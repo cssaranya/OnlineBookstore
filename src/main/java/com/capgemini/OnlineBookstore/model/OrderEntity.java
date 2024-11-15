@@ -21,7 +21,7 @@ public class OrderEntity {
     @Column(name = "order_id")
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "shoppingcart_id")
     @JsonBackReference
     private ShoppingCartEntity shoppingCart;
@@ -32,10 +32,12 @@ public class OrderEntity {
     private OrderStatus status;
 
     private double orderamount;
-
+    /*
     @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonBackReference
     private UserEntity user;
+*/
 }
+
 

@@ -7,7 +7,7 @@ public class BookRequestMapper {
     public BookEntity map(Book book){
         return BookEntity.builder()
                 .price(book.getPrice())
-                .id(book.getBookid())
+                .id(book.getId())
                 .title(book.getTitle())
                 .author(book.getAuthor())
                 .build();

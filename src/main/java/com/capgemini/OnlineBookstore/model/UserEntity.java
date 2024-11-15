@@ -39,11 +39,9 @@ public class UserEntity {
     @Column(name = "phonenumber")
     private String phonenumber;
 
+    /*
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<OrderEntity> orders;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private ShoppingCartEntity shoppingCart;
+*/
 }

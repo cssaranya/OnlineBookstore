@@ -4,19 +4,18 @@ import com.capgemini.OnlineBookstore.dto.User;
 import com.capgemini.OnlineBookstore.exception.InvalidRequestException;
 import com.capgemini.OnlineBookstore.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/register")
     public String registerUser(@Valid @RequestBody User user){
@@ -25,13 +24,13 @@ public class UserController {
         return "UserEntity registered successfully";
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/getById/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id){
         User user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @Valid @RequestBody User user){
         validateRequest(user);
         User updatedUser = userService.updateUser(id, user);
@@ -44,19 +43,19 @@ public class UserController {
         String email = user.getEmail();
         String address = user.getAddress();
         String phonenumber = user.getPhonenumber();
-        if (userName == null || "".equals(userName)){
+        if (userName == null || userName.isEmpty()){
             throw new InvalidRequestException("Registration failed : UserName is mandatory");
         }
-        if (password == null || "".equals(password)){
+        if (password == null || password.isEmpty()){
             throw new InvalidRequestException("Registration failed : Password is mandatory");
         }
-        if (email == null || "".equals(email)){
+        if (email == null || email.isEmpty()){
             throw new InvalidRequestException("Registration failed : Email is mandatory");
         }
-        if (address == null || "".equals(address)){
+        if (address == null || address.isEmpty()){
             throw new InvalidRequestException("Registration failed : Address is mandatory");
         }
-        if (phonenumber == null || "".equals(phonenumber)){
+        if (phonenumber == null || phonenumber.isEmpty()){
             throw new InvalidRequestException("Registration failed : Phonenumber is mandatory");
         }
     }

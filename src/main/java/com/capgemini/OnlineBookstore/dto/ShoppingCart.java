@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class ShoppingCart {
-    private Long shoppingcartId;
+    private Long id;
     private User user;
     private List<CartItem> items;
 }

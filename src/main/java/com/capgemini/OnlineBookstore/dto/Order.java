@@ -13,10 +13,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class Order {
-    private Long orderId;
+    private Long id;
     private ShoppingCart shoppingCart;
     private LocalDateTime orderDate;
     private OrderStatus status;
     private double orderamount;
-    private User user;
 }

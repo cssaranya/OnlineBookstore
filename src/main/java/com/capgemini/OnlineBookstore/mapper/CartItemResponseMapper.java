@@ -1,16 +1,16 @@
 package com.capgemini.OnlineBookstore.mapper;
 
 import com.capgemini.OnlineBookstore.dto.CartItem;
-import com.capgemini.OnlineBookstore.dto.ShoppingCart;
 import com.capgemini.OnlineBookstore.model.CartItemEntity;
-import com.capgemini.OnlineBookstore.model.ShoppingCartEntity;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CartItemResponseMapper {
     BookResponseMapper bookResponseMapper = new BookResponseMapper();
     public CartItem map(CartItemEntity cartItemEntity){
         return CartItem.builder()
                 .book(bookResponseMapper.map(cartItemEntity.getBook()))
-                .cartitemId(cartItemEntity.getId())
+                .id(cartItemEntity.getId())
                 .quantity(cartItemEntity.getQuantity())
                 .shoppingcartId(cartItemEntity.getShoppingCart().getId())
                 .build();

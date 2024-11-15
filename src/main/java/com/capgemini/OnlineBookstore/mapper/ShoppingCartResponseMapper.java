@@ -1,10 +1,10 @@
 package com.capgemini.OnlineBookstore.mapper;
 
-import com.capgemini.OnlineBookstore.dto.Book;
 import com.capgemini.OnlineBookstore.dto.CartItem;
 import com.capgemini.OnlineBookstore.dto.ShoppingCart;
-import com.capgemini.OnlineBookstore.model.BookEntity;
+import com.capgemini.OnlineBookstore.dto.User;
 import com.capgemini.OnlineBookstore.model.ShoppingCartEntity;
+import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class ShoppingCartResponseMapper {
     CartItemResponseMapper cartItemResponseMapper = new CartItemResponseMapper();
-    UserResponseMapper userResponseMapper = new UserResponseMapper();
+    ModelMapper modelMapper = new ModelMapper();
     public ShoppingCart map(ShoppingCartEntity shoppingCartEntity){
         List<CartItem> cartItemList = new ArrayList<>();
         if (shoppingCartEntity.getItems() != null && !shoppingCartEntity.getItems().isEmpty()) {
@@ -23,8 +23,8 @@ public class ShoppingCartResponseMapper {
 
         return ShoppingCart.builder()
                 .items(cartItemList)
-                .shoppingcartId(shoppingCartEntity.getId())
-                .user(userResponseMapper.map(shoppingCartEntity.getUser()))
+                .id(shoppingCartEntity.getId())
+                .user(modelMapper.map(shoppingCartEntity.getUser(), User.class))
                 .build();
     }
 }

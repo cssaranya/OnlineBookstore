@@ -30,7 +30,7 @@ public class BookControllerTest {
     @WithMockUser(username = "user")
     void testGetAllBooks() throws Exception {
 
-        mockMvc.perform(get("/books").with(httpBasic("user", "password")))
+        mockMvc.perform(get("/books/allBooks").with(httpBasic("user", "password")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("length()").value(2))
                 .andExpect(jsonPath("$[0].title").value("Angles & Demons"))
@@ -42,7 +42,7 @@ public class BookControllerTest {
     void testSaveBook() throws Exception {
         String bookJson = "{\"id\":3,\"title\":\"Da vinci code\",\"author\":\"Dan Brown\",\"price\":11}";
 
-        mockMvc.perform(post("/books").with(httpBasic("user", "password"))
+        mockMvc.perform(post("/books/saveBook").with(httpBasic("user", "password"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(bookJson))
                 .andExpect(status().isOk());
@@ -55,7 +55,7 @@ public class BookControllerTest {
     void testEmptyAuthor() throws Exception {
         String bookJson = "{\"title\":\"Da vinci code\",\"author\":\"\",\"price\":11}";
 
-        mockMvc.perform(post("/books").with(httpBasic("user", "password"))
+        mockMvc.perform(post("/books/saveBook").with(httpBasic("user", "password"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(bookJson))
                 .andExpect(status().isBadRequest());
@@ -66,7 +66,7 @@ public class BookControllerTest {
     void testTitleNull() throws Exception {
         String bookJson = "{\"author\":\"Dan Brown\",\"price\":11}";
 
-        mockMvc.perform(post("/books").with(httpBasic("user", "password"))
+        mockMvc.perform(post("/books/saveBook").with(httpBasic("user", "password"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(bookJson))
                 .andExpect(status().isBadRequest());
@@ -75,7 +75,7 @@ public class BookControllerTest {
     @Test
     @WithMockUser(username = "user")
     void testGetBookById() throws Exception {
-        mockMvc.perform(get("/books/2").with(httpBasic("user", "password")))
+        mockMvc.perform(get("/books/bookById/2").with(httpBasic("user", "password")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.price").value(11));
     }
@@ -83,7 +83,7 @@ public class BookControllerTest {
     @Test
     @WithMockUser(username = "user")
     void testNoBookById() throws Exception {
-        mockMvc.perform(get("/books/6").with(httpBasic("user", "password")))
+        mockMvc.perform(get("/books/bookById/6").with(httpBasic("user", "password")))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("BookEntity not found for id 6"));
     }
@@ -91,7 +91,7 @@ public class BookControllerTest {
     @Test
     @WithMockUser(username = "user")
     void testGetBookByTitle() throws Exception {
-        mockMvc.perform(get("/books/title").param("title","Angles & Demons").with(httpBasic("user", "password")))
+        mockMvc.perform(get("/books/bookByTitle").param("title","Angles & Demons").with(httpBasic("user", "password")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("Angles & Demons"))
                 .andExpect(jsonPath("$.author").value("Dan Brown"));
@@ -100,7 +100,7 @@ public class BookControllerTest {
     @Test
     @WithMockUser(username = "user")
     void testNoBookByTitle() throws Exception {
-        mockMvc.perform(get("/books/title").param("title","Da vinci code").with(httpBasic("user", "password")))
+        mockMvc.perform(get("/books/bookByTitle").param("title","Da vinci code").with(httpBasic("user", "password")))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("No book found with the title Da vinci code"));
     }
@@ -108,7 +108,7 @@ public class BookControllerTest {
     @Test
     @WithMockUser(username = "user")
     void testGetBookByAuthor() throws Exception {
-        mockMvc.perform(get("/books/author").param("author","Dan Brown").with(httpBasic("user", "password")))
+        mockMvc.perform(get("/books/bookByAuthor").param("author","Dan Brown").with(httpBasic("user", "password")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].title").value("Angles & Demons"))
                 .andExpect(jsonPath("$[0].author").value("Dan Brown"));

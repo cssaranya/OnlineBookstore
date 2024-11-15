@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class Book {
-    private Long bookid;
+    private Long id;
     private String title;
     private String author;
     private double price;
