@@ -1,13 +1,9 @@
 package com.capgemini.OnlineBookstore.service;
 
 import com.capgemini.OnlineBookstore.dto.Book;
-import com.capgemini.OnlineBookstore.mapper.BookRequestMapper;
-import com.capgemini.OnlineBookstore.mapper.BookResponseMapper;
 import com.capgemini.OnlineBookstore.model.BookEntity;
 import com.capgemini.OnlineBookstore.repository.BookRepository;
-import jakarta.transaction.Transactional;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -68,7 +64,6 @@ public class BookServiceTest {
         BookEntity mockBookEntityEntity = new BookEntity(bookId, "Da vinci code", "Dan Brown", 11);
         Book bookDTO = new Book(1L, "Da vinci code", "Dan Brown", 11);
         when(bookRepository.findById(bookId)).thenReturn(Optional.of(mockBookEntityEntity));
-        when(modelMapper.map(bookDTO, BookEntity.class)).thenReturn(mockBookEntityEntity);
         when(modelMapper.map(mockBookEntityEntity, Book.class)).thenReturn(bookDTO);
 
         Book book = bookService.getBookById(bookId);
@@ -82,8 +77,7 @@ public class BookServiceTest {
         String author = "Dan Brown";
         BookEntity mockBookEntityEntity = new BookEntity(1L, "Da vinci code", author, 11);
         Book bookDTO = new Book(1L, "Da vinci code", "Dan Brown", 11);
-        when(bookRepository.findByAuthor(author)).thenReturn(Arrays.asList(mockBookEntityEntity));
-        when(modelMapper.map(bookDTO, BookEntity.class)).thenReturn(mockBookEntityEntity);
+        when(bookRepository.findByAuthor(author)).thenReturn(List.of(mockBookEntityEntity));
         when(modelMapper.map(mockBookEntityEntity, Book.class)).thenReturn(bookDTO);
 
         List<Book> books = bookService.getBookByAuthor(author);
@@ -99,7 +93,6 @@ public class BookServiceTest {
         Book bookDTO = new Book(1L, "Da vinci code", "Dan Brown", 11);
 
         when(bookRepository.findByTitle(title)).thenReturn(mockBookEntityEntity);
-        when(modelMapper.map(bookDTO, BookEntity.class)).thenReturn(mockBookEntityEntity);
         when(modelMapper.map(mockBookEntityEntity, Book.class)).thenReturn(bookDTO);
 
         Book book = bookService.getBookByTitle(title);

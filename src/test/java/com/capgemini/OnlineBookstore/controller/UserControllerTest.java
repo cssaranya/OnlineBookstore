@@ -3,7 +3,6 @@ package com.capgemini.OnlineBookstore.controller;
 import com.capgemini.OnlineBookstore.model.UserEntity;
 import com.capgemini.OnlineBookstore.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -47,7 +46,7 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(user)))
                 .andExpect(status().isOk())
-                .andExpect(content().string("UserEntity registered successfully"));;
+                .andExpect(content().string("UserEntity registered successfully"));
 
         Optional<UserEntity> savedUser = userRepository.findByUsername("css");
         assertThat(savedUser).isNotNull();

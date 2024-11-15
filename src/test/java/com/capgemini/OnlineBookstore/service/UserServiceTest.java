@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,6 +31,9 @@ public class UserServiceTest {
     @Mock
     UserRepository userRepository;
 
+    @Mock
+    private ModelMapper modelMapper;
+
     @InjectMocks
     UserService userService;
 
@@ -45,10 +49,8 @@ public class UserServiceTest {
                 .email("css@test.com")
                 .phonenumber("0987867")
                 .build();
-        when(passwordEncoder.encode(anyString())).thenReturn(password);
-        when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
 
-        User user = User.builder()
+        User userDTO = User.builder()
                 .id(10L)
                 .password(username)
                 .username(password)
@@ -56,7 +58,14 @@ public class UserServiceTest {
                 .email("css@test.com")
                 .phonenumber("0987867")
                 .build();
-        User registeredUser = userService.registerUser(user);
+
+        when(passwordEncoder.encode(anyString())).thenReturn(password);
+        when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
+
+        when(modelMapper.map(userDTO, UserEntity.class)).thenReturn(userEntity);
+        when(modelMapper.map(userEntity, User.class)).thenReturn(userDTO);
+
+        User registeredUser = userService.registerUser(userDTO);
         assertEquals(username,registeredUser.getUsername());
         assertEquals(password,registeredUser.getPassword());
     }
@@ -65,11 +74,17 @@ public class UserServiceTest {
     public void testLoadUserByUsername(){
         String username = "user";
         String password = "password";
-        UserEntity user = new UserEntity();
-        user.setPassword(password);
-        user.setUsername(username);
-        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
+        UserEntity userEntity = new UserEntity();
+        userEntity.setPassword(password);
+        userEntity.setUsername(username);
 
+        User userDTO = new User();
+        userDTO.setPassword(password);
+        userDTO.setUsername(username);
+
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(userEntity));
+        when(modelMapper.map(userDTO, UserEntity.class)).thenReturn(userEntity);
+        when(modelMapper.map(userEntity, User.class)).thenReturn(userDTO);
         UserDetails userDetails = userService.loadUserByUsername(username);
 
         assertEquals(username, userDetails.getUsername());
@@ -79,9 +94,16 @@ public class UserServiceTest {
     @Test
     public void testFindByUsername(){
         String username = "user";
-        UserEntity user = new UserEntity();
-        user.setUsername(username);
-        when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(user));
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUsername(username);
+
+        User userDTO = new User();
+        userDTO.setUsername(username);
+
+        when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(userEntity));
+
+        when(modelMapper.map(userDTO, UserEntity.class)).thenReturn(userEntity);
+        when(modelMapper.map(userEntity, User.class)).thenReturn(userDTO);
         User savedUser = userService.findByUsername(username);
         assertEquals(username,savedUser.getUsername());
     }
@@ -92,8 +114,6 @@ public class UserServiceTest {
 
         when(userRepository.findByUsername(anyString())).thenReturn(Optional.empty());
 
-        assertThrows(UsernameNotFoundException.class, () -> {
-            userService.loadUserByUsername(username);
-        });
+        assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername(username));
     }
 }

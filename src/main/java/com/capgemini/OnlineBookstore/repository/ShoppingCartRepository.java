@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface ShoppingCartRepository extends JpaRepository<ShoppingCartEntity, Long> {
-    Optional<ShoppingCartEntity> findByUserId(Long userId);
+    Optional<ShoppingCartEntity> findByUserId(Long Id);
     boolean existsByUserId(Long userId);
 }
