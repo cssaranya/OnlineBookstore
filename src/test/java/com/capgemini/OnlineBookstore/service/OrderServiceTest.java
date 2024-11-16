@@ -1,20 +1,17 @@
 package com.capgemini.OnlineBookstore.service;
 
 import com.capgemini.OnlineBookstore.dto.Order;
-import com.capgemini.OnlineBookstore.model.OrderEntity;
-import com.capgemini.OnlineBookstore.model.ShoppingCartEntity;
-import com.capgemini.OnlineBookstore.model.UserEntity;
+import com.capgemini.OnlineBookstore.exception.EntityNotFoundException;
+import com.capgemini.OnlineBookstore.model.*;
 import com.capgemini.OnlineBookstore.repository.OrderRepository;
 import com.capgemini.OnlineBookstore.repository.ShoppingCartRepository;
 import com.capgemini.OnlineBookstore.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
-import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,8 +20,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@DirtiesContext
-@RunWith(MockitoJUnitRunner.class)
+
 public class OrderServiceTest {
 
     @Mock
@@ -42,7 +38,10 @@ public class OrderServiceTest {
     @InjectMocks
     private OrderService orderService;
 
-
+    @BeforeEach
+    void setup(){
+        MockitoAnnotations.openMocks(this);
+    }
     @Test
     void testNoOrdersException() {
         when(orderRepository.findByUserId(1L)).thenReturn(List.of());
@@ -102,8 +101,14 @@ public class OrderServiceTest {
 
     @Test
     void testCreateOrder() {
+        BookEntity bookEntityEntity = new BookEntity(1L, "Da vinci code", "author", 11);
+        CartItemEntity cartItemEntity = CartItemEntity.builder()
+                .id(1L)
+                .book(bookEntityEntity)
+                .build();
         ShoppingCartEntity shoppingCartEntity = ShoppingCartEntity.builder()
                 .id(1L)
+                .items(List.of(cartItemEntity))
                 .build();
         OrderEntity orderEntity = OrderEntity.builder().id(1L).build();
         UserEntity userEntity = UserEntity.builder().id(1L).build();

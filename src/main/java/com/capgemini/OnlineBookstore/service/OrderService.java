@@ -1,13 +1,14 @@
 package com.capgemini.OnlineBookstore.service;
 
 import com.capgemini.OnlineBookstore.dto.Order;
+import com.capgemini.OnlineBookstore.exception.EntityNotFoundException;
+import com.capgemini.OnlineBookstore.exception.InvalidRequestException;
 import com.capgemini.OnlineBookstore.model.*;
 import com.capgemini.OnlineBookstore.repository.OrderItemRepository;
 import com.capgemini.OnlineBookstore.repository.OrderRepository;
 import com.capgemini.OnlineBookstore.repository.ShoppingCartRepository;
 import com.capgemini.OnlineBookstore.repository.UserRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -40,12 +41,24 @@ public class OrderService {
                 .orElseThrow(() -> new EntityNotFoundException("No shopping cart found for user: " + userId));
 
         if (userCart.getItems().isEmpty()) {
-            throw new IllegalStateException("Cannot create order with empty cart");
+            throw new InvalidRequestException("Cannot create order with empty cart");
         }
 
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found: " + userId));
 
+        OrderEntity orderEntity = getOrderEntity(userCart, user);
+
+        Order order = modelMapper.map(orderRepository.save(orderEntity), Order.class);
+
+        if (order != null && order.getStatus() == OrderStatus.PLACED) {
+            userCart.getItems().clear();
+        }
+
+        return order;
+    }
+
+    private static OrderEntity getOrderEntity(ShoppingCartEntity userCart, UserEntity user) {
         OrderEntity orderEntity = OrderEntity.builder()
                 .user(user)
                 .orderDate(LocalDateTime.now())
@@ -61,9 +74,7 @@ public class OrderService {
                         .build())
                 .collect(Collectors.toList()));
 
-        userCart.getItems().clear(); // Clear the shopping cart items after creating the order
-
-        return modelMapper.map(orderRepository.save(orderEntity), Order.class);
+        return orderEntity;
     }
 
     public Order getOrderById(Long orderId) {

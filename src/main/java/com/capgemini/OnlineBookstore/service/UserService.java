@@ -1,13 +1,13 @@
 package com.capgemini.OnlineBookstore.service;
 
 import com.capgemini.OnlineBookstore.dto.User;
+import com.capgemini.OnlineBookstore.exception.UserNotFoundException;
 import com.capgemini.OnlineBookstore.model.UserEntity;
 import com.capgemini.OnlineBookstore.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,12 +30,12 @@ public class UserService implements UserDetailsService {
     }
 
     public User getUserById(Long id){
-        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("UserEntity not found with id "+ id));
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("UserEntity not found with id "+ id));
         return modelMapper.map(userEntity, User.class);
     }
 
     public User updateUser(Long id, User user){
-        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("UserEntity not found with id "+ id));
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("UserEntity not found with id "+ id));
 
         userEntity.setPhonenumber(user.getPhonenumber());
         userEntity.setEmail(user.getEmail());
@@ -46,12 +46,12 @@ public class UserService implements UserDetailsService {
     }
 
     public User findByUsername(String userName){
-        UserEntity userEntity = userRepository.findByUsername(userName).orElseThrow(() -> new UsernameNotFoundException("UserEntity not found with id name"+ userName));
+        UserEntity userEntity = userRepository.findByUsername(userName).orElseThrow(() -> new UserNotFoundException("UserEntity not found with id name"+ userName));
         return modelMapper.map(userEntity, User.class);
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UserNotFoundException {
         User user = findByUsername(username);
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), new ArrayList<>());
     }
