@@ -4,11 +4,9 @@ import com.capgemini.OnlineBookstore.dto.Order;
 import com.capgemini.OnlineBookstore.exception.EntityNotFoundException;
 import com.capgemini.OnlineBookstore.exception.InvalidRequestException;
 import com.capgemini.OnlineBookstore.model.*;
-import com.capgemini.OnlineBookstore.repository.OrderItemRepository;
 import com.capgemini.OnlineBookstore.repository.OrderRepository;
 import com.capgemini.OnlineBookstore.repository.ShoppingCartRepository;
 import com.capgemini.OnlineBookstore.repository.UserRepository;
-
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -22,7 +20,6 @@ import java.util.stream.Collectors;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final ShoppingCartRepository shoppingCartRepository;
-    private final OrderItemRepository orderItemRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
@@ -53,6 +50,7 @@ public class OrderService {
 
         if (order != null && order.getStatus() == OrderStatus.PLACED) {
             userCart.getItems().clear();
+            shoppingCartRepository.save(userCart);
         }
 
         return order;
