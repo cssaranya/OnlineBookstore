@@ -27,7 +27,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for simplicity in a backend-only application
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/users/register",
                                 "/api-docs/**",
@@ -42,9 +42,8 @@ public class SecurityConfig {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        // Configure the global authentication manager
-        auth.userDetailsService(userService) // Use UserService to load user details
-                .passwordEncoder(passwordEncoder); // Use BCryptPasswordEncoder to encode passwords
+        auth.userDetailsService(userService)
+                .passwordEncoder(passwordEncoder);
     }
 }
 

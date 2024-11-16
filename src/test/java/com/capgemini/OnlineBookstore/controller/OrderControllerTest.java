@@ -38,8 +38,8 @@ public class OrderControllerTest {
     @WithMockUser(username = "user")
     void testGetUserOrders() throws Exception {
         List<Order> orders = Arrays.asList(
-                new Order(1L, null, null, null, 20.0),
-                new Order(2L, null, null, null, 30.0)
+                new Order(1L, null, null, null, 20.0, null),
+                new Order(2L, null, null, null, 30.0, null)
         );
         when(orderService.getUserOrders(1L)).thenReturn(orders);
 
@@ -55,7 +55,7 @@ public class OrderControllerTest {
     @Test
     @WithMockUser(username = "user")
     void testCreateOrder() throws Exception {
-        Order order = new Order(1L, null, null, null, 20.0);
+        Order order = new Order(1L, null, null, null, 20.0, null);
         when(orderService.createOrder(1L)).thenReturn(order);
 
         mockMvc.perform(post("/orders/createOrder/1").with(httpBasic("user", "password"))
@@ -69,7 +69,7 @@ public class OrderControllerTest {
     @Test
     @WithMockUser(username = "user")
     void testGetOrderDetails() throws Exception {
-        Order order = new Order(1L, null, null, null, 20.0);
+        Order order = new Order(1L, null, null, null, 20.0, null);
         when(orderService.getOrderById(1L)).thenReturn(order);
 
         mockMvc.perform(get("/orders/orderDetails/1").with(httpBasic("user", "password")))

@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -15,9 +16,10 @@ import java.time.LocalDateTime;
 @Builder
 public class Order {
     private Long id;
-    private ShoppingCart shoppingCart;
+    private User user;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime orderDate;
     private OrderStatus status;
     private double orderamount;
+    private List<OrderItem> items;
 }

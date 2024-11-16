@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
@@ -22,9 +23,9 @@ public class OrderEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "shoppingcart_id")
+    @JoinColumn(name = "user_id")
     @JsonBackReference
-    private ShoppingCartEntity shoppingCart;
+    private UserEntity user;
 
     private LocalDateTime orderDate;
 
@@ -32,12 +33,9 @@ public class OrderEntity {
     private OrderStatus status;
 
     private double orderamount;
-    /*
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonBackReference
-    private UserEntity user;
-*/
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItemEntity> items;
 }
 
 

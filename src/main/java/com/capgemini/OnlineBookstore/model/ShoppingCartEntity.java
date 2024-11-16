@@ -27,10 +27,6 @@ public class ShoppingCartEntity {
     @JsonManagedReference
     private List<CartItemEntity> items;
 
-    @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<OrderEntity> orders;
-
     @OneToOne
     @JoinColumn(name = "user_id")
     @JsonBackReference

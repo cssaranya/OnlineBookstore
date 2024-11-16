@@ -77,8 +77,6 @@ public class ShoppingCartService {
         ShoppingCartEntity shoppingCartEntity = cartRepository.findByUserId(userId)
                 .orElseThrow(() -> new CartNotFoundException("Shopping cart not found for user: " + userId));
 
-        System.out.println("shoppingCartEntity " + shoppingCartEntity.toString());
-
         Long updatedShoppingCartId = getUpdatedCartId(bookId, quantity, shoppingCartEntity);
 
         ShoppingCartEntity updatedCartEntity = cartRepository.findById(updatedShoppingCartId)
@@ -88,7 +86,6 @@ public class ShoppingCartService {
 
     private Long getUpdatedCartId(Long bookId, Integer quantity, ShoppingCartEntity shoppingCartEntity) {
         Long updatedShoppingCartId;
-        System.out.println("shoppingCartEntity " + shoppingCartEntity.toString() + " BookId " + bookId + " quantity "+ quantity);
         CartItem updatedCartItem = updateItemIfExists(shoppingCartEntity, bookId, quantity);
 
         if (updatedCartItem == null){
@@ -108,16 +105,14 @@ public class ShoppingCartService {
     }
 
     private CartItem updateItemIfExists(ShoppingCartEntity shoppingCartEntity, Long bookId, Integer quantity) {
-        System.out.println("shoppingCartEntity " + shoppingCartEntity.toString() + " BookId " + bookId + " quantity "+ quantity);
         Optional<CartItemEntity> itemEntity = shoppingCartEntity.getItems().stream()
-                .filter(cartItemEntity -> cartItemEntity.getBook().getId() == bookId)
+                .filter(cartItemEntity -> cartItemEntity.getBook().getId().equals(bookId))
                 .findFirst();
         CartItem updatedCartItem = new CartItem();
         if(itemEntity.isPresent()) {
             System.out.println("itemEntity " + itemEntity.get());
             updatedCartItem  = updateItemQuantity(itemEntity.get().getId(), quantity+itemEntity.get().getQuantity());
         }
-        System.out.println("updatedCartItem " + updatedCartItem.toString());
         return updatedCartItem;
     }
 
@@ -135,6 +130,9 @@ public class ShoppingCartService {
 
 
     public void removeCartItem(Long itemId) {
+        if (!cartItemRepository.existsById(itemId)) {
+            throw new EntityNotFoundException("Cart item not found: " + itemId);
+        }
         cartItemRepository.deleteById(itemId);
     }
 }

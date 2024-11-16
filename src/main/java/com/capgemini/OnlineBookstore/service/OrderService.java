@@ -1,15 +1,18 @@
 package com.capgemini.OnlineBookstore.service;
 
 import com.capgemini.OnlineBookstore.dto.Order;
-import com.capgemini.OnlineBookstore.model.OrderEntity;
-import com.capgemini.OnlineBookstore.model.ShoppingCartEntity;
+import com.capgemini.OnlineBookstore.model.*;
+import com.capgemini.OnlineBookstore.repository.OrderItemRepository;
 import com.capgemini.OnlineBookstore.repository.OrderRepository;
 import com.capgemini.OnlineBookstore.repository.ShoppingCartRepository;
+import com.capgemini.OnlineBookstore.repository.UserRepository;
+
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,14 +21,12 @@ import java.util.stream.Collectors;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final ShoppingCartRepository shoppingCartRepository;
+    private final OrderItemRepository orderItemRepository;
+    private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
     public List<Order> getUserOrders(Long userId) {
-
-        ShoppingCartEntity userCart = shoppingCartRepository.findByUserId(userId)
-                .orElseThrow(() -> new EntityNotFoundException("No shopping card found for user: " + userId));
-
-        List<OrderEntity> userOrders = orderRepository.findByShoppingCartId(userCart.getId());
+        List<OrderEntity> userOrders = orderRepository.findByUserId(userId);
         if (userOrders.isEmpty()) {
             throw new EntityNotFoundException("No orders found for user: " + userId);
         }
@@ -36,34 +37,38 @@ public class OrderService {
 
     public Order createOrder(Long userId) {
         ShoppingCartEntity userCart = shoppingCartRepository.findByUserId(userId)
-                .orElseThrow(() -> new EntityNotFoundException("No shopping card found for user: " + userId));
+                .orElseThrow(() -> new EntityNotFoundException("No shopping cart found for user: " + userId));
 
         if (userCart.getItems().isEmpty()) {
             throw new IllegalStateException("Cannot create order with empty cart");
         }
-        // else if (userCart.get)
 
-        // Order order = Order.builder()
-        //         .shoppingCart(cart)
-        //         .user(cart.getUser())
-        //         .orderDate(LocalDateTime.now())
-        //         .status(OrderStatus.PLACED)
-        //         .build();
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found: " + userId));
 
-        // // Calculate order amount based on cart items
-        // double total = cart.getItems().stream()
-        //         .mapToDouble(item -> item.getBook().getPrice() * item.getQuantity())
-        //         .sum();
-        // order.setOrderamount(total);
-        // OrderEntity orderEntity = modelMapper.map(order, OrderEntity.class);
-        // return modelMapper.map(orderRepository.save(orderEntity),Order.class);
-        return null;
+        OrderEntity orderEntity = OrderEntity.builder()
+                .user(user)
+                .orderDate(LocalDateTime.now())
+                .status(OrderStatus.PLACED)
+                .orderamount(userCart.getItems().stream().mapToDouble(item -> item.getBook().getPrice() * item.getQuantity()).sum())
+                .build();
+
+        orderEntity.setItems(userCart.getItems().stream()
+                .map(cartItem -> OrderItemEntity.builder()
+                        .order(orderEntity)
+                        .book(cartItem.getBook())
+                        .quantity(cartItem.getQuantity())
+                        .build())
+                .collect(Collectors.toList()));
+
+        userCart.getItems().clear(); // Clear the shopping cart items after creating the order
+
+        return modelMapper.map(orderRepository.save(orderEntity), Order.class);
     }
-
 
     public Order getOrderById(Long orderId) {
         OrderEntity orderEntity = orderRepository.findById(orderId)
                 .orElseThrow(() -> new EntityNotFoundException("Order not found: " + orderId));
-        return modelMapper.map(orderEntity,Order.class);
+        return modelMapper.map(orderEntity, Order.class);
     }
 }
