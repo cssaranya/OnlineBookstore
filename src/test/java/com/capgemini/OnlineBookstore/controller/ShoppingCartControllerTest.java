@@ -2,7 +2,6 @@ package com.capgemini.OnlineBookstore.controller;
 
 import com.capgemini.OnlineBookstore.model.ShoppingCartEntity;
 import com.capgemini.OnlineBookstore.repository.ShoppingCartRepository;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,7 +15,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional
 public class ShoppingCartControllerTest {
     @Autowired
     private MockMvc mockMvc;

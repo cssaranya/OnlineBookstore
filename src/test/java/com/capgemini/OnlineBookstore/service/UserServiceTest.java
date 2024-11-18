@@ -3,6 +3,7 @@ package com.capgemini.OnlineBookstore.service;
 import com.capgemini.OnlineBookstore.dto.User;
 import com.capgemini.OnlineBookstore.model.UserEntity;
 import com.capgemini.OnlineBookstore.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -12,7 +13,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Optional;
 
@@ -22,7 +22,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
-@DirtiesContext
+
+@Transactional
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
     @Mock

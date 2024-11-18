@@ -6,6 +6,7 @@ import com.capgemini.OnlineBookstore.model.*;
 import com.capgemini.OnlineBookstore.repository.OrderRepository;
 import com.capgemini.OnlineBookstore.repository.ShoppingCartRepository;
 import com.capgemini.OnlineBookstore.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -21,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
+@Transactional
 public class OrderServiceTest {
 
     @Mock

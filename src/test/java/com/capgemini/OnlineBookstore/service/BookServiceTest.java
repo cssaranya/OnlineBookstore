@@ -3,13 +3,13 @@ package com.capgemini.OnlineBookstore.service;
 import com.capgemini.OnlineBookstore.dto.Book;
 import com.capgemini.OnlineBookstore.model.BookEntity;
 import com.capgemini.OnlineBookstore.repository.BookRepository;
+import jakarta.transaction.Transactional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
-import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-@DirtiesContext
+@Transactional
 public class BookServiceTest {
     @Mock
     private BookRepository bookRepository;
