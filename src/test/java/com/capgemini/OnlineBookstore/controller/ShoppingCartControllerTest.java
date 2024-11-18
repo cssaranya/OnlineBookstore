@@ -43,7 +43,7 @@ public class ShoppingCartControllerTest {
     void testCreateShoppingCart() throws Exception {
 
         mockMvc.perform(post("/cart/createCart/2").with(httpBasic("user", "password")))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(2))
                 .andExpect(jsonPath("$.user.id").value(2))
                 .andExpect(jsonPath("$.user.username").value("Suptha"))

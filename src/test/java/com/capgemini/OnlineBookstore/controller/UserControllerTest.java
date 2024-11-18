@@ -45,7 +45,7 @@ public class UserControllerTest {
         mockMvc.perform((post("/users/register"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(user)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().string("UserEntity registered successfully"));
 
         Optional<UserEntity> savedUser = userRepository.findByUsername("css");

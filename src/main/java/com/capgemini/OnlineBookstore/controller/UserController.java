@@ -5,6 +5,7 @@ import com.capgemini.OnlineBookstore.exception.InvalidRequestException;
 import com.capgemini.OnlineBookstore.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +19,10 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/register")
-    public String registerUser(@Valid @RequestBody User user){
+    public ResponseEntity<String> registerUser(@Valid @RequestBody User user){
         validateRequest(user);
         userService.registerUser(user);
-        return "UserEntity registered successfully";
+        return ResponseEntity.status(HttpStatus.CREATED).body("UserEntity registered successfully");
     }
 
     @GetMapping("/getById/{id}")

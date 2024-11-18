@@ -3,6 +3,7 @@ package com.capgemini.OnlineBookstore.controller;
 import com.capgemini.OnlineBookstore.dto.Order;
 import com.capgemini.OnlineBookstore.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ public class OrderController {
     @PostMapping("/createOrder/{userId}")
     public ResponseEntity<Order> createOrder(@PathVariable Long userId) {
         Order order = orderService.createOrder(userId);
-        return ResponseEntity.ok(order);
+        return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
 
     @GetMapping("/orderDetails/{orderId}")

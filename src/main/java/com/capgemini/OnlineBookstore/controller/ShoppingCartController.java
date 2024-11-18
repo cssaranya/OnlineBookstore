@@ -6,6 +6,7 @@ import com.capgemini.OnlineBookstore.service.ShoppingCartService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +26,7 @@ public class ShoppingCartController {
     @PostMapping("/createCart/{userId}")
     public ResponseEntity<ShoppingCart> createShoppingCart(@PathVariable Long userId) {
         ShoppingCart cart = cartService.createShoppingCart(userId);
-        return ResponseEntity.ok(cart);
+        return ResponseEntity.status(HttpStatus.CREATED).body(cart);
     }
 
     @PostMapping("/add/{userId}/items/{bookId}")

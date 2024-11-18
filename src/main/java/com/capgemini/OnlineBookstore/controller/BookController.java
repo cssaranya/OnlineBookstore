@@ -5,6 +5,7 @@ import com.capgemini.OnlineBookstore.exception.InvalidRequestException;
 import com.capgemini.OnlineBookstore.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,7 @@ public class BookController {
             throw new InvalidRequestException("BookEntity title and author are required");
         }
         Book savedBook = bookService.saveBook(book);
-        return ResponseEntity.ok(savedBook);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedBook);
     }
 
     @GetMapping("/bookById/{id}")

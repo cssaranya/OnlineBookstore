@@ -61,7 +61,7 @@ public class OrderControllerTest {
         mockMvc.perform(post("/orders/createOrder/1").with(httpBasic("user", "password"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(order)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.orderamount").value(20.0));
     }

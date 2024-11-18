@@ -45,7 +45,7 @@ public class BookControllerTest {
         mockMvc.perform(post("/books/saveBook").with(httpBasic("user", "password"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(bookJson))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         assertEquals(3, bookRepository.findAll().size());
     }
